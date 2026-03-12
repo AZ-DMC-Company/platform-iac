@@ -11,7 +11,7 @@ data  "azurerm_container_app_environment" "env" {
 resource "azurerm_container_app" "backend" {
   name                         = var.containerapp_backend
   container_app_environment_id = data.azurerm_container_app_environment.env.id
-  resource_group_name          = data.azurerm_resource_group.apps.name
+  resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
 
   template {
@@ -37,7 +37,7 @@ resource "azurerm_container_app" "backend" {
 resource "azurerm_container_app" "frontend" {
   name                         = var.containerapp_frontend
   container_app_environment_id = azurerm_container_app_environment.env.id
-  resource_group_name          = azurerm_resource_group.apps.name
+  resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
 
   template {
