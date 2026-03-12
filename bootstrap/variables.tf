@@ -1,13 +1,13 @@
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "East US"
+  default     = "eastus"
 }
 
 variable "resource_group_name" {
   description = "Resource group for Terraform state"
   type        = string
-  default     = "rg-ricvera-dev-eastus-001"
+  default     = "rg-ricvera-dev-eastus-01"
 }
 
 variable "storage_account_name" {
