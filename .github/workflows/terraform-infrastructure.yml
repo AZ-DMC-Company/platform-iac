@@ -50,8 +50,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
             echo "🚨 Destruyendo Infraestructura Principal..."
-            terraform force-unlock -force efbc93a2-9ae5-b0ed-8427-fab23f83649d
             terraform plan -destroy
+            echo "Luego del terraform plan -destroy"
             return
             terraform destroy -auto-approve
           else
