@@ -40,17 +40,24 @@ jobs:
 
       - name: List Container App Environments
         run: az containerapp env list -o table
-
+        env:
+          ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+          ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+          ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+          ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
 
       - name: Terraform Action
         run: |
           if [ "${{ github.event.inputs.action }}" = "destroy" ]; then
+            echo "🚨 Destruyendo Infraestructura Principal..."
             terraform destroy -auto-approve
           else
+            echo "🛠 Aplicando Infraestructura Principal..."
             terraform plan -out=tfplan \
               -var="backend_image=${{ secrets.BACKEND_IMAGE }}" \
               -var="frontend_image=${{ secrets.FRONTEND_IMAGE }}"
             terraform apply -auto-approve tfplan
+          fi
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
