@@ -4,20 +4,20 @@ resource "azurerm_resource_group" "apps" {
 }
 
 resource "azurerm_container_app_environment" "env" {
-  name                       = "aca-env-demo"
+  name                       = var.containerappenvironment
   location                   = var.location
   resource_group_name        = azurerm_resource_group.apps.name
 }
 
 resource "azurerm_container_app" "backend" {
-  name                         = "orders-api"
+  name                         = var.containerapp_backend
   container_app_environment_id = azurerm_container_app_environment.env.id
   resource_group_name          = azurerm_resource_group.apps.name
   revision_mode                = "Single"
 
   template {
     container {
-      name   = "orders-api"
+      name   = var.containerapp_backend
       image  = var.backend_image
       cpu    = 0.5
       memory = "1Gi"
@@ -36,14 +36,14 @@ resource "azurerm_container_app" "backend" {
 }
 
 resource "azurerm_container_app" "frontend" {
-  name                         = "orders-ui"
+  name                         = var.containerapp_frontend
   container_app_environment_id = azurerm_container_app_environment.env.id
   resource_group_name          = azurerm_resource_group.apps.name
   revision_mode                = "Single"
 
   template {
     container {
-      name   = "orders-ui"
+      name   = var.containerapp_frontend
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"

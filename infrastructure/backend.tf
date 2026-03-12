@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "rg-terraform-state"
-    storage_account_name = "tfstateplataformxyz123"
-    container_name       = "tfstate"
-    key                  = "infrastructure.tfstate"
+    resource_group_name  = "rg-ricvera-dev-eastus-01"
+    storage_account_name = "tfstatericveradev01"
+    container_name       = "tfstate-ricvera-dev"
+    key                  = "dev-infrastructure.tfstate"
   }
 }
