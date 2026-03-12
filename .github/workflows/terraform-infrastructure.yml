@@ -53,6 +53,7 @@ jobs:
             terraform plan -destroy
             echo "Luego del terraform plan -destroy"
             return
+            echo "Se saltó el return"
             terraform destroy -auto-approve
           else
             echo "🛠 Aplicando Infraestructura Principal..."
