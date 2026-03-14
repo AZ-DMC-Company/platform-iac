@@ -4,53 +4,46 @@ on:
   workflow_dispatch:
 
 jobs:
-
   test-app:
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to Azure
+      - name: Login Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Verify Frontend URL
-        id: frontend
+      - name: Set environment variables
         run: |
-          FRONTEND_URL=$(az containerapp show \
+          # URL del frontend, puede ser un output de Terraform si lo guardas
+          echo "FRONTEND_URL=$(az containerapp show \
             --name orders-frontend-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --query properties.configuration.ingress.fqdn -o tsv)
-          echo "Frontend URL: $FRONTEND_URL"
-          # Prueba si responde HTTP 200
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://$FRONTEND_URL)
-          if [ "$STATUS" != "200" ]; then
-            echo "Frontend is not responding correctly!"
+            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
+
+      - name: Test Frontend HTTP response
+        run: |
+          echo "Testing frontend at $FRONTEND_URL ..."
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$FRONTEND_URL)
+          echo "Frontend HTTP status: $STATUS_CODE"
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Frontend health check failed!"
             exit 1
           fi
-          echo "Frontend is responding correctly."
-          echo "::set-output name=url::$FRONTEND_URL"
+          echo "Frontend health check passed."
 
-      - name: Verify Backend via Container App Exec
+      - name: Test Frontend → Backend integration
         run: |
-          # Ejecuta un curl interno dentro del backend
-          az containerapp exec \
-            --name orders-backend-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
-            --command "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/actuator/health" \
-            || (echo "Backend health check failed!" && exit 1)
-          echo "Backend health check passed."
-
-      - name: Test Frontend → Backend Integration
-        run: |
-          FRONTEND_URL=${{ steps.frontend.outputs.url }}
-          # Prueba una llamada que el frontend haga al backend
+          echo "Testing frontend-backend integration ..."
+          # Esto depende de tu API de ejemplo, ajusta el endpoint
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://$FRONTEND_URL/api/test)
-          if [ "$RESPONSE" != "200" ]; then
-            echo "Frontend cannot reach backend properly!"
+          echo "Integration HTTP status: $RESPONSE"
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Frontend-backend integration check failed!"
             exit 1
           fi
-          echo "Frontend and backend integration verified successfully."
+          echo "Frontend-backend integration check passed."
