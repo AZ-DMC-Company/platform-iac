@@ -2,7 +2,7 @@ provider "azurerm" {
   features {}
 }
 terraform {
-  required_version = ">= 3.69"
+  required_version = ">= 1.5"
 
   backend "azurerm" {
     resource_group_name  = "orders-rg-tfstate-dev-eus-01"
