@@ -11,7 +11,7 @@ variable "existing_cae_name" {
 }
 
 variable "existing_cae_rg" {
-  description = "Existing CAE name"
+  description = "Resource Group where the existing CAE lives"
   type        = string  
   default     = "rg-hansqm2-dev-westus2-001"
 }
