@@ -1,0 +1,42 @@
+name: Restart CA
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Selecciona qué CA reiniciar'
+        required: true
+        default: frontend
+        type: choice
+        options:
+          - frontend
+          - backend
+
+jobs:
+  restart-ca:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.azure_credentials }}
+
+    - name: Force restart selected Container App
+      run: |
+        if [ "${{ github.event.inputs.target }}" = "frontend" ]; then
+          echo "Reiniciando el frontend CA..."
+          az containerapp update \
+            --name orders-frontend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --set-env-vars RESTART_TRIGGER=$(date +%s)
+        else
+          echo "Reiniciando el backend CA..."
+          az containerapp update \
+            --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --set-env-vars RESTART_TRIGGER=$(date +%s)
+        fi
