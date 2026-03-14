@@ -78,7 +78,7 @@ jobs:
       - name: Test Prometheus HTTP response
         run: |
           echo "Testing Prometheus at $PROMETHEUS_URL ..."
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$PROMETHEUS_URL)
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$PROMETHEUS_URL/query)
           echo "Prometheus HTTP status: $STATUS_CODE"
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Prometheus health check failed!"
