@@ -23,8 +23,9 @@ resource "azurerm_container_app" "prometheus" {
       memory = "0.5Gi"
 
       # Esto sirve para dev: Prometheus usa la URL del backend público directamente
-      environment_variables = {
-        PROMETHEUS_TARGET = "orders-backend-dev-01.gentleglacier-13b71ce3.eastus.azurecontainerapps.io:8080"
+      env = {
+        name  = "PROMETHEUS_TARGET"
+        value = "orders-backend-dev-01.gentleglacier-13b71ce3.eastus.azurecontainerapps.io:8080"
       }
 
       args = [
