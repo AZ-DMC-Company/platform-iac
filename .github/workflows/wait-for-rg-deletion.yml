@@ -1,0 +1,31 @@
+name: wait-for-rg-deletion
+
+on:
+  workflow_dispatch:
+    inputs:
+      rg_name:
+        description: 'Nombre del Resource Group a esperar'
+        required: true
+        default: 'orders-rg-app-dev-eus-01'
+
+jobs:
+  wait:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Wait for RG deletion
+        run: |
+          echo "Esperando a que el Resource Group ${{ github.event.inputs.rg_name }} sea eliminado..."
+          while az group show --name ${{ github.event.inputs.rg_name }} >/dev/null 2>&1; do
+            echo "El Resource Group todavía existe, esperando 15 segundos..."
+            sleep 15
+          done
+          echo "El Resource Group ha sido eliminado."
