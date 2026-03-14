@@ -12,13 +12,13 @@ resource "azurerm_container_app" "backend" {
       cpu    = 0.25
       memory = "0.5Gi"
     }
-  }
 
-  ingress {
-    external_enabled = false
-    target_port      = 8080
+    ingress {
+      external_enabled = false
+      target_port      = 8080
+    }
 
-    traffic {
+    revision_traffic {
       latest_revision = true
       weight          = 100
     }
