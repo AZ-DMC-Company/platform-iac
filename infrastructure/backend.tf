@@ -14,10 +14,14 @@ resource "azurerm_container_app" "backend" {
     }
   }
 
-  # Ingress NO va dentro de template, va directamente en el recurso
   ingress {
     external_enabled = false
     target_port      = 8080
     transport        = "Auto"
+
+    traffic {
+      revision_name = "backend"
+      weight        = 100
+    }
   }
 }

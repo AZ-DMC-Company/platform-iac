@@ -18,5 +18,10 @@ resource "azurerm_container_app" "frontend" {
     external_enabled = true
     target_port      = 80
     transport        = "Auto"
+
+    traffic {
+      revision_name = "frontend"
+      weight        = 100
+    }
   }
 }
