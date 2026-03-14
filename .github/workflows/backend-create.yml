@@ -1,0 +1,33 @@
+name: terraform-backend-create
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  terraform:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          cd backend
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          cd backend
+          terraform apply -auto-approve
