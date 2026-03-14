@@ -5,20 +5,18 @@ resource "azurerm_container_app" "frontend" {
   container_app_environment_id = azurerm_container_app_environment.cae.id
   revision_mode                = "Single"
 
-  configuration {
-    ingress {
-      external_enabled = true   # público
-      target_port      = 80
-      transport        = "Auto"
-    }
-  }
-
   template {
     container {
       name   = "frontend"
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"
+    }
+
+    ingress {
+      external_enabled = true
+      target_port      = 80
+      transport        = "Auto"
     }
   }
 }
