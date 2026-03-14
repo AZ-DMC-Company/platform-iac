@@ -8,6 +8,11 @@ resource "azurerm_container_app" "prometheus" {
     external_enabled = true
     target_port      = 9090
     transport        = "auto"
+
+    traffic_weight {
+      latest_revision = true
+      percentage    = 100
+    }    
   }
 
   template {
