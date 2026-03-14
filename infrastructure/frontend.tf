@@ -11,39 +11,11 @@ resource "azurerm_container_app" "frontend" {
       image  = var.frontend_image
       cpu    = 0.25
       memory = "0.5Gi"
-
-      probe {
-        type      = "Liveness"
-        port      = 80
-        transport = "Http"
-        http_get {
-          path = "/"
-        }
-      }
-
-      probe {
-        type      = "Readiness"
-        port      = 80
-        transport = "Http"
-        http_get {
-          path = "/"
-        }
-      }
-    }
-
-    scale {
-      min_replicas = 1
-      max_replicas = 1
     }
   }
 
   ingress {
     external_enabled = true
     target_port      = 80
-
-    traffic_weight {
-      revision_name = "frontend"
-      weight        = 100
-    }
   }
 }
