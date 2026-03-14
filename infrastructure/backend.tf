@@ -12,11 +12,12 @@ resource "azurerm_container_app" "backend" {
       cpu    = 0.25
       memory = "0.5Gi"
     }
+  }
 
-    ingress {
-      external_enabled = false
-      target_port      = 8080
-      transport        = "Auto"
-    }
+  # Ingress NO va dentro de template, va directamente en el recurso
+  ingress {
+    external_enabled = false
+    target_port      = 8080
+    transport        = "Auto"
   }
 }
