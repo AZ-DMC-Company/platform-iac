@@ -7,9 +7,6 @@ resource "azurerm_mysql_flexible_server" "grafana_db" {
   administrator_login = "grafanaadmin"
   administrator_password = var.grafana_mysql_password
 
-  sku_name = "B1MS"            # Gratis / mínimo
-  storage_mb = 32               # mínimo permitido
-  backup_retention_days = 7
-  auto_grow_enabled     = true
-  publicly_accessible   = true
+  sku_name = "B1ms"   # Gratis / mínimo
+  tier     = "Burstable"
 }
