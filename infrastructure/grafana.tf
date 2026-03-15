@@ -1,7 +1,15 @@
+resource "azurerm_storage_account" "grafana" {
+  name                     = "ordersgrafanadev01"
+  resource_group_name      = azurerm_resource_group.rg_app.name
+  location                 = azurerm_resource_group.rg_app.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
 resource "azurerm_storage_share" "grafana" {
-  name               = "grafana"
-  storage_account_id = azurerm_storage_account.tf_state.id
-  quota              = 1
+  name                 = "grafana"
+  storage_account_name = azurerm_storage_account.grafana.name
+  quota                = 1
 }
 
 resource "azurerm_container_app" "grafana" {
@@ -37,22 +45,18 @@ resource "azurerm_container_app" "grafana" {
         value = "admin123"
       }
 
-      # La clave aquí es `volume_mounts { name = <volume>, path = <mount_path> }`
       volume_mounts {
         name = "grafana-data"
-        path = "/var/lib/grafana"  # <- tu mount path
+        path = "/var/lib/grafana"
       }
     }
 
-    # Define un solo `volume` (no plural `volumes`)
     volume {
-      name = "grafana-data"
-
-      azure_file {
-        storage_account_name = azurerm_storage_account.tf_state.name
-        share_name           = azurerm_storage_share.grafana.name
-        read_only            = false
-      }
+      name         = "grafana-data"
+      storage_type = "AzureFile"
+      share_name   = azurerm_storage_share.grafana.name
+      storage_account_name = azurerm_storage_account.grafana.name
+      read_only    = false
     }
   }
 }
