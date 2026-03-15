@@ -31,6 +31,10 @@ jobs:
             --name orders-prometheus-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV          
+          echo "GRAFANA_URL=$(az containerapp show \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_
 
       - name: Test Frontend HTTP response
         run: |
@@ -85,3 +89,14 @@ jobs:
             exit 1
           fi
           echo "Prometheus health check passed."            
+
+      - name: Test Grafana HTTP response
+        run: |
+          echo "Testing Grafana at $GRAFANA_URL ..."
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://$GRAFANA_URL)
+          echo "Grafana HTTP status: $STATUS_CODE"
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Grafana health check failed!"
+            exit 1
+          fi
+          echo "Grafana health check passed."              
