@@ -22,7 +22,17 @@ resource "azurerm_container_app" "grafana" {
       cpu    = 0.25
       memory = "0.5Gi"
 
-      # Variables de entorno básicas para dev
+      # Login anónimo (dev-friendly)
+      env {
+        name  = "GF_AUTH_ANONYMOUS_ENABLED"
+        value = "true"
+      }
+      env {
+        name  = "GF_AUTH_ANONYMOUS_ORG_ROLE"
+        value = "Admin"
+      }
+
+      # Opcional: mantener admin clásico si quieres
       env {
         name  = "GF_SECURITY_ADMIN_USER"
         value = "admin"
