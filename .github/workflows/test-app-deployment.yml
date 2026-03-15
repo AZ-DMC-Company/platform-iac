@@ -34,7 +34,7 @@ jobs:
           echo "GRAFANA_URL=$(az containerapp show \
             --name orders-grafana-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
-            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_
+            --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
 
       - name: Test Frontend HTTP response
         run: |
