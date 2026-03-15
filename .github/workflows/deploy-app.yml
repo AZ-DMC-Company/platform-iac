@@ -21,13 +21,11 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.0
 
       - name: Terraform Init
         run: |
           cd infrastructure
-          terraform init -upgrade
+          terraform init
         env:
           ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
@@ -37,7 +35,6 @@ jobs:
       - name: Terraform Validate
         run: |
           cd infrastructure
-          terraform fmt -recursive
           terraform validate
 
       - name: Terraform Apply
