@@ -11,6 +11,7 @@ on:
         options:
           - frontend
           - backend
+          - prometheus
 
 jobs:
   restart-ca:
@@ -33,10 +34,16 @@ jobs:
             --name orders-frontend-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --set-env-vars RESTART_TRIGGER=$(date +%s)
-        else
+        elif [ "${{ github.event.inputs.target }}" = "backend" ]; then
           echo "Reiniciando el backend CA..."
           az containerapp update \
             --name orders-backend-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --set-env-vars RESTART_TRIGGER=$(date +%s)
+        else
+          echo "Reiniciando el Prometheus CA..."
+          az containerapp update \
+            --name orders-prometheus-dev-01 \
             --resource-group orders-rg-app-dev-eus-01 \
             --set-env-vars RESTART_TRIGGER=$(date +%s)
         fi
