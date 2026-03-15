@@ -51,6 +51,19 @@ jobs:
             --resource-group orders-rg-app-dev-eus-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
 
+      - name: CAE Storage list
+        run: |
+          az containerapp env storage list \
+            --name orders-env-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            
+      - name: Get logs Grafana CA
+        run: |
+          az containerapp logs show \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --follow \
+           
       - name: Test Frontend HTTP response
         run: |
           echo "Testing frontend at $FRONTEND_URL ..."
