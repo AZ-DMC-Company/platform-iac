@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "grafana" {
 
 resource "azurerm_storage_share" "grafana" {
   name                 = "grafana"
-  storage_account_name = azurerm_storage_account.grafana.name
+  storage_account_id   = azurerm_storage_account.grafana.id
   quota                = 1
 }
 
@@ -25,7 +25,7 @@ resource "azurerm_container_app" "grafana" {
 
     traffic_weight {
       latest_revision = true
-      percentage      = 100
+      percentage    = 100
     }    
   }
 
@@ -45,20 +45,17 @@ resource "azurerm_container_app" "grafana" {
         value = "admin123"
       }
 
-      # Montaje de volumen: aquí usamos mount_path, no path
       volume_mounts {
-        name       = "grafana-data"
-        mount_path = "/var/lib/grafana"
+        name = "grafana-data"
+        path = "/var/lib/grafana"
       }
     }
 
-    # Definición del volumen con Azure File
     volume {
-      name = "grafana-data"
-
+      name         = "grafana-data"
+      storage_type = "AzureFile"
       azure_file {
-        storage_account_name = azurerm_storage_account.grafana.name
-        share_name           = azurerm_storage_share.grafana.name
+        share_name = azurerm_storage_share.grafana.name
       }
     }
   }
