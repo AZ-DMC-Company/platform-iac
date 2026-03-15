@@ -32,6 +32,11 @@ jobs:
             --resource-group $RG_NAME \
             -o table
 
+      - name: List availability of MySQLFlexibleServer by selected regions
+        run: |
+          az mysql flexible-server list-skus --location eastus
+          az mysql flexible-server list-skus --location eastus2  
+
       - name: Check Grafana replicas
         run: |
           echo "Checking Grafana replicas and status..."
