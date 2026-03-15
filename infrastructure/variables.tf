@@ -27,3 +27,9 @@ variable "workload" {
   type    = string
   default = "orders"
 }
+
+variable "grafana_mysql_password" {
+  description = "Password for Grafana MySQL admin"
+  type        = string
+  sensitive   = true
+}

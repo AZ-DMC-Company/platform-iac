@@ -20,9 +20,29 @@ resource "azurerm_container_app" "grafana" {
     container {
       name   = "grafana"
       image  = "grafana/grafana:latest"
-      cpu    = 0.5
-      memory = "1Gi"
+      cpu    = 0.25
+      memory = "0.5Gi"
 
+      env {
+        name  = "GF_DATABASE_TYPE"
+        value = "mysql"
+      }
+      env {
+        name  = "GF_DATABASE_HOST"
+        value = azurerm_mysql_flexible_server.grafana_db.fqdn
+      }
+      env {
+        name  = "GF_DATABASE_NAME"
+        value = "grafana"
+      }
+      env {
+        name  = "GF_DATABASE_USER"
+        value = "grafanaadmin"
+      }
+      env {
+        name  = "GF_DATABASE_PASSWORD"
+        value = var.grafana_mysql_password
+      }
       env {
         name  = "GF_SECURITY_ADMIN_USER"
         value = "admin"
@@ -31,17 +51,6 @@ resource "azurerm_container_app" "grafana" {
         name  = "GF_SECURITY_ADMIN_PASSWORD"
         value = "admin123"
       }
-
-      volume_mounts {
-        name = "grafana-data"
-        path = "/var/lib/grafana"
-      }
-    }
-
-    volume {
-      name          = "grafana-data"
-      storage_name  = azurerm_container_app_environment_storage.cae_storage.name
-      storage_type  = "AzureFile"
     }
   }
 }
