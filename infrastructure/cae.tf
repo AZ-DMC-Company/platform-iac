@@ -24,5 +24,5 @@ resource "azurerm_container_app_environment_storage" "cae_storage" {
   account_name                 = azurerm_storage_account.grafana.name
   share_name                   = azurerm_storage_share.grafana.name
   access_key                   = azurerm_storage_account.grafana.primary_access_key
-  access_mode                  = "ReadOnly"
+  access_mode                  = "ReadWrite"
 }

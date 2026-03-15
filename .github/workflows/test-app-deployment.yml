@@ -32,6 +32,15 @@ jobs:
             --resource-group $RG_NAME \
             -o table
 
+      - name: Check Grafana replicas
+        run: |
+          echo "Checking Grafana replicas..."
+          az containerapp revision list \
+            --name orders-grafana-dev-01 \
+            --resource-group orders-rg-app-dev-eus-01 \
+            --query "[].{name:name, active:activeReplicas}" \
+            -o table
+
       - name: Set environment variables
         run: |
           echo "FRONTEND_URL=$(az containerapp show \
@@ -51,18 +60,6 @@ jobs:
             --resource-group orders-rg-app-dev-eus-01 \
             --query properties.configuration.ingress.fqdn -o tsv)" >> $GITHUB_ENV
 
-      - name: CAE Storage list
-        run: |
-          az containerapp env storage list \
-            --name orders-env-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
-            
-      - name: Get logs Grafana CA
-        run: |
-          az containerapp logs show \
-            --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
-            --follow \
            
       - name: Test Frontend HTTP response
         run: |
