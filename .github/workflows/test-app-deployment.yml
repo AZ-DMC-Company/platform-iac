@@ -36,6 +36,7 @@ jobs:
         run: |
           az mysql flexible-server list-skus --location eastus
           az mysql flexible-server list-skus --location eastus2  
+          az account list-locations -o table
 
       - name: Check Grafana replicas
         run: |
