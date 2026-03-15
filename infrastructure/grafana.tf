@@ -1,16 +1,3 @@
-resource "azurerm_storage_account" "grafana" {
-  name                     = "ordersgrafanadev01"
-  resource_group_name      = azurerm_resource_group.rg_app.name
-  location                 = azurerm_resource_group.rg_app.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-resource "azurerm_storage_share" "grafana" {
-  name                        = "grafana"
-  storage_account_name        = azurerm_storage_account.grafana.name
-  quota                       = 1
-}
 
 resource "azurerm_container_app" "grafana" {
   name                         = "${var.workload}-grafana-${var.env}-01"
