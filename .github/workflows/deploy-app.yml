@@ -27,7 +27,7 @@ jobs:
       - name: Terraform Validate
         run: |
           cd infrastructure
-          terraform fmt -check
+          terraform fmt -recursive
           terraform validate
 
       - name: Terraform Init
