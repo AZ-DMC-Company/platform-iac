@@ -37,9 +37,7 @@ jobs:
           echo "Checking Grafana replicas and status..."
           az containerapp revision list \
             --name orders-grafana-dev-01 \
-            --resource-group orders-rg-app-dev-eus-01 \
-            --query "[].{name:name, active:activeReplicas, succeeded:succeededReplicas, failed:failedReplicas}" \
-            -o table
+            --resource-group orders-rg-app-dev-eus-01
 
       - name: Tail Grafana logs
         run: |
